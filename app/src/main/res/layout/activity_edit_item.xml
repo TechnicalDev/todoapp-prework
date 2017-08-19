@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.codepath.simpletodo.EditItemActivity">
+    <EditText
+        android:id="@+id/etEditItem"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+    </EditText>
+
+    <Button
+        android:id="@+id/btnEditItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/etEditItem"
+        android:text="Save"
+        android:onClick="onSaveItem"/>
+</RelativeLayout>
