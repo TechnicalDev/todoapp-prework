@@ -57,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
         File filesDir = getFilesDir();
         File todoFile = new File(filesDir,"todo.txt");
         try {
+            if (!todoFile.exists()) {
+                todoFile.createNewFile();
+            }
             items = new ArrayList<String>(FileUtils.readLines(todoFile));
         }
         catch(IOException e){
