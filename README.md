@@ -15,6 +15,10 @@ The following **required** functionality is completed:
 * [ ] User can **persist todo items** and retrieve them properly on app restart
 
 
+The following **optional** features are implemented:
+
+* [ ] Persist the todo items [into SQLite](http://guides.codepath.com/android/Persisting-Data-to-the-Device#sqlite) instead of a text file
+
 ## License
 
     Copyright [2017] [Shyam Sundar Ashok]

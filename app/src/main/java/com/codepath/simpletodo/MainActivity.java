@@ -10,11 +10,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,18 +27,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         lvItems = (ListView)findViewById(R.id.lvItems);
+        loadItems();
+        setupListViewListener();
+    }
+
+    private void loadItems(){
         readItems();
         itemsAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,items);
         lvItems.setAdapter(itemsAdapter);
-        setupListViewListener();
     }
 
     public void onAddItem(View v){
         EditText etNewItem = (EditText)findViewById(R.id.etNewItem);
-        String itemText = etNewItem.getText().toString();
-        itemsAdapter.add(itemText);
+        ToDo todo = new ToDo();
+        todo.todoItem = etNewItem.getText().toString();
+        writeItem(todo);
         etNewItem.setText("");
-        writeItems();
+        loadItems();
     }
 
     private void setupListViewListener(){
@@ -49,9 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> adapterView, View item, int pos, long id) {
-                        items.remove(pos);
-                        itemsAdapter.notifyDataSetChanged();
-                        writeItems();
+                        deleteItem(pos);
                         return true;
                     }
                 }
@@ -68,28 +68,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readItems(){
-        File filesDir = getFilesDir();
-        File todoFile = new File(filesDir,"todo.txt");
-        try {
-            if (!todoFile.exists()) {
-                todoFile.createNewFile();
-            }
-            items = new ArrayList<String>(FileUtils.readLines(todoFile));
-        }
-        catch(IOException e){
-            e.printStackTrace();
+        // Get singleton instance of database
+        TodoItemDatabase databaseHelper = TodoItemDatabase.getInstance(this);
+        // Get all todos from database
+        List<ToDo> todos = databaseHelper.getAllToDos();
+        items = new ArrayList<String>();
+        for (ToDo todo : todos) {
+            items.add(todo.todoItem);
         }
     }
 
-    private void writeItems(){
-        File filesDir = getFilesDir();
-        File todoFile = new File(filesDir,"todo.txt");
-        try {
-            FileUtils.writeLines(todoFile,items);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
+    private void writeItem(ToDo todo){
+        // Get singleton instance of database
+        TodoItemDatabase databaseHelper = TodoItemDatabase.getInstance(this);
+        // Add sample todoitem to the database
+        databaseHelper.addToDo(todo);
+    }
+
+    private void deleteItem(int todoId){
+        // Get singleton instance of database
+        TodoItemDatabase databaseHelper = TodoItemDatabase.getInstance(this);
+        // delete todoitem to the database
+        databaseHelper.deleteTodo(todoId);
+        items.remove(todoId);
+        itemsAdapter.notifyDataSetChanged();
     }
 
     public void launchEditView(String todoItem) {
@@ -106,11 +108,19 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             // Extract name value from result extras
             String todoItem = data.getExtras().getString("todo");
+            updateItem(todoItem);
             // Toast the name to display temporarily on screen
             Toast.makeText(this, todoItem, Toast.LENGTH_SHORT).show();
-            items.set(editItemPOS,todoItem);
-            writeItems();
         }
+    }
+
+    private void updateItem(String todoItem){
+        // Get singleton instance of database
+        TodoItemDatabase databaseHelper = TodoItemDatabase.getInstance(this);
+        // Update todoitem to the database
+        databaseHelper.updateToDo(editItemPOS,todoItem);
+        items.set(editItemPOS,todoItem);
+        itemsAdapter.notifyDataSetChanged();
     }
 
 }
