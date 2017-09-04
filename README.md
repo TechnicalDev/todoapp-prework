@@ -19,6 +19,15 @@ The following **optional** features are implemented:
 
 * [ ] Persist the todo items [into SQLite](http://guides.codepath.com/android/Persisting-Data-to-the-Device#sqlite) instead of a text file
 
+## Project Analysis
+
+As part of your pre-work submission, please reflect on the app and answer the following questions below:
+
+**Question 1:** "What are your reactions to the Android app development platform so far? Compare and contrast Android's approach to layouts and user interfaces in past platforms you've used."
+
+**Answer:** Android app development is interesting as the app is built native to the OS. I have mostly worked on web based apps and making them responsive to fit in a mobile/tablet layout.
+ I am currently looking into developing hybrid apps with ionic and reactive native which is apckaged natively into android.
+
 ## License
 
     Copyright [2017] [Shyam Sundar Ashok]
